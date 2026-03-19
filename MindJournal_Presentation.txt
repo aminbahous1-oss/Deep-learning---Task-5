@@ -1,0 +1,172 @@
+================================================================================
+                              MINDJOURNAL
+         A Smart Mental Health Journal powered by Cognitive Services
+                   TIES4911 – Task 8 | University of Jyväskylä
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 1 — TITLE
+────────────────────────────────────────────────────────────────────────────────
+
+Title:      MindJournal
+Subtitle:   A Smart Mental Health Journal powered by Cognitive Services
+Course:     TIES4911 – 
+University: University of Jyväskylä
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 2 — THE PROBLEM
+────────────────────────────────────────────────────────────────────────────────
+
+Why do we need a smart journal?
+
+  • 1 in 4 people struggle to recognize and track their own emotional patterns
+  • Traditional journaling gives no feedback or actionable insights
+  • Mental health check-ins are often skipped because they feel tedious
+  • People lack tools that bridge self-reflection and data-driven awareness
+
+  Goal: Make emotional self-awareness effortless and data-driven
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 3 — WHAT IS MINDJOURNAL?
+────────────────────────────────────────────────────────────────────────────────
+
+Our Solution — A web-based smart journal that:
+
+  • Lets you speak or type how you feel — no friction
+  • Analyzes your emotions from both your text and your face (webcam)
+  • Tracks your mood over time with interactive visual charts
+  • Requires zero mental health expertise to use
+  • Works instantly — no sign-up, runs entirely in your browser
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 4 — COGNITIVE SERVICES USED
+────────────────────────────────────────────────────────────────────────────────
+
+Multi-provider integration:
+
+  ┌─────────────────────────┬──────────────────────────┬─────────────────────┐
+  │ Service                 │ Provider                 │ Purpose             │
+  ├─────────────────────────┼──────────────────────────┼─────────────────────┤
+  │ Natural Language        │ IBM Watson               │ Emotion + Sentiment │
+  │ Understanding (NLU)     │                          │ from text           │
+  ├─────────────────────────┼──────────────────────────┼─────────────────────┤
+  │ Web Speech API          │ Browser (Native)         │ Voice-to-text input │
+  ├─────────────────────────┼──────────────────────────┼─────────────────────┤
+  │ face-api.js             │ Open Source (ML)         │ Real-time webcam    │
+  │                         │                          │ emotion detection   │
+  ├─────────────────────────┼──────────────────────────┼─────────────────────┤
+  │ Chart.js                │ Open Source              │ Mood trend charts   │
+  └─────────────────────────┴──────────────────────────┴─────────────────────┘
+
+  Providers: IBM  ·  Browser Native API  ·  Open Source ML
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 5 — SYSTEM ARCHITECTURE
+────────────────────────────────────────────────────────────────────────────────
+
+How it all connects:
+
+  [User speaks / types]
+          │
+          ├──── Speech API (Browser) ──────────────────────┐
+          │                                                 │
+          └──── Webcam (face-api.js) ──── Face Emotion      │
+                                                           ▼
+                                              [Flask Backend]
+                                                     │
+                                                     ▼
+                                           [IBM Watson NLU]
+                                         Emotion + Sentiment
+                                                     │
+                                                     ▼
+                                            [localStorage]
+                                                     │
+                                                     ▼
+                                        [Dashboard Charts & Trends]
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 6 — FEATURE 1: JOURNAL ENTRY PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+URL: http://localhost:5000
+
+  LEFT COLUMN — Journal Entry:
+    • Large text area for typing or dictating the journal entry
+    • [🎤 Start Recording] button — uses browser Speech API
+    • [📸 Capture Mood]   button — takes webcam snapshot
+    • [Analyze Entry]     button — sends text to IBM Watson NLU
+    • Status message: "✓ Entry saved!" after analysis
+
+  RIGHT COLUMN — Results:
+    • Live webcam feed
+    • Face Emotion result  e.g. "😊 Joy (82%)"
+    • Emotion bars (colored by type):
+        Joy      ████████████░░░░  75%
+        Sadness  ██░░░░░░░░░░░░░░  10%
+        Anger    █░░░░░░░░░░░░░░░   5%
+        Fear     █░░░░░░░░░░░░░░░   6%
+        Disgust  █░░░░░░░░░░░░░░░   4%
+    • Sentiment badge: POSITIVE (0.80)
+    • Demo notice: "⚠️ Using demo data — add Watson API key for real analysis"
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 7 — FEATURE 2: MOOD DASHBOARD
+────────────────────────────────────────────────────────────────────────────────
+
+URL: http://localhost:5000/dashboard
+
+  Stats Row:
+    ┌───────────────┬───────────────┬───────────────┬───────────────┐
+    │ Total Entries │   Avg Joy     │  Avg Sadness  │  Top Mood     │
+    │      12       │     68%       │     14%       │  😊 Joy       │
+    └───────────────┴───────────────┴───────────────┴───────────────┘
+
+  Charts:
+    • Line Chart  — emotion trends over the last 14 entries
+                    (Joy / Sadness / Anger / Fear / Disgust over time)
+    • Bar Chart   — average emotion distribution across all entries
+
+  Recent Entries (last 5):
+    • Date & time
+    • First 100 characters of the journal text
+    • Dominant emotion badge  e.g. [😊 Joy]
+    • Sentiment label  e.g. [Positive]
+
+  [Clear All Data] button — resets localStorage
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 8 — POSSIBLE EXTENSIONS
+────────────────────────────────────────────────────────────────────────────────
+
+Where MindJournal could go next:
+
+  • AWS Comprehend      — deeper sentiment analysis and entity detection
+  • Azure Translator    — multi-language journal support
+  • Firebase / Supabase — user accounts with cloud storage
+  • Push notifications  — daily reminder to write an entry
+  • Therapist mode      — export mood reports as PDF to share with a professional
+  • Mobile app          — React Native version for iOS / Android
+  • Wearable integration — correlate heart rate data with mood entries
+
+
+────────────────────────────────────────────────────────────────────────────────
+SLIDE 9 — SUMMARY
+────────────────────────────────────────────────────────────────────────────────
+
+  ✅  Built a fully working Smart Mental Health Journal prototype
+  ✅  Combined 3 cognitive service sources (IBM Watson, Browser API, face-api.js)
+  ✅  Works immediately with demo mode — real analysis enabled by one API key
+  ✅  Demonstrates real-world value in the Healthcare / Wellness domain
+  ✅  Extensible to AWS, Azure, and mobile platforms
+
+                    TIES4911 – University of Jyväskylä
+
+================================================================================
